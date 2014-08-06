@@ -4,13 +4,12 @@
 ;;; Code:
 ;;; Please stop with the nagging question marks on the side
 
-(delete-selection-mode 1) ;; Overwrite/delete selected text
-
-;;; Use ergoemacs mode for standard keybindings;(package-initialize)
-(require 'ergoemacs-mode)
+;;; Set up ergoemacs-mode
 (setq ergoemacs-theme nil) ;; Standard Ergoemacs keyboard theme
 (setq ergoemacs-keyboard-layout "us") ;; Assume QWERTY
 (ergoemacs-mode 1)
+
+(delete-selection-mode 1) ;; Overwrite/delete selected text
 
 ;; Display line numbers
 (require 'linum)

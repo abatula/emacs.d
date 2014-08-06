@@ -5,6 +5,8 @@
 ;;; Please stop with the nagging question marks on the side
 
 ;;; Set up ergoemacs-mode
+(require 'ergoemacs-mode)
+(package-initialize)
 (setq ergoemacs-theme nil) ;; Standard Ergoemacs keyboard theme
 (setq ergoemacs-keyboard-layout "us") ;; Assume QWERTY
 (ergoemacs-mode 1)

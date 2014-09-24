@@ -40,6 +40,10 @@
 ;; Bind intelligent comment section to Ctrl-d
 (global-set-key (kbd "C-d") 'comment-or-uncomment-region-or-line)
 
+;; PDF latex
+(require 'tex)
+(TeX-global-PDF-mode t)
+
 ;;; Changing shortcuts
 ;(global-set-key (kbd "C-c") 'clipboard-kill-ring-save) ;; Ctrl+c copy: This will probably cause problems with the many C-c C-<something> commands that I don't use anyway
 ;(global-set-key (kbd "C-x") 'clipboard-kill-region) ;; Ctrl+x cut

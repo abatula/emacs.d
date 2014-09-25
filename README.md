@@ -1,20 +1,21 @@
 # A reasonable Emacs config
 
-This is my emacs configuration tree, continually used and tweaked
-since 2000, and it may be a good starting point for other Emacs
-users, especially those who are web developers. These days it's
-somewhat geared towards OS X, but it is known to also work on Linux
-and Windows.
+This emacs configuration tree is forked from 
+https://github.com/purcell/emacs.d and modified for my personal
+preferences, focusing more on Python with some MATLAB/Octave and 
+Latex thrown in. My tweaks have only ever been tested in Linux.
 
 Emacs itself comes with support for many programming languages. This
 config adds improved defaults and extended support for the following:
 
+* Python
+* Latex
+* MATLAB
 * Ruby / Ruby on Rails
 * CSS / LESS / SASS / SCSS
 * HAML / Markdown / Textile / ERB
 * Clojure (via nrepl)
 * Javascript / Coffeescript
-* Python
 * PHP
 * Haskell
 * Erlang

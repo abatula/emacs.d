@@ -44,6 +44,11 @@
 (require 'tex)
 (TeX-global-PDF-mode t)
 
+;; ESS for R
+(require 'ess-site)
+
+
+
 ;;; Changing shortcuts
 ;(global-set-key (kbd "C-c") 'clipboard-kill-ring-save) ;; Ctrl+c copy: This will probably cause problems with the many C-c C-<something> commands that I don't use anyway
 ;(global-set-key (kbd "C-x") 'clipboard-kill-region) ;; Ctrl+x cut

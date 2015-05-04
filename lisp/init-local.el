@@ -47,15 +47,8 @@
 ;; ESS for R
 (require 'ess-site)
 
-
-
-;;; Changing shortcuts
-;(global-set-key (kbd "C-c") 'clipboard-kill-ring-save) ;; Ctrl+c copy: This will probably cause problems with the many C-c C-<something> commands that I don't use anyway
-;(global-set-key (kbd "C-x") 'clipboard-kill-region) ;; Ctrl+x cut
-;(global-set-key (kbd "C-v") 'clipboard-yank) ;; Ctrl+v paste
-;(global-set-key (kbd "C-o") 'find-file) ;; Ctrl+o open
-;(global-set-key (kbd "C-f") 'search) ;; Ctrl+f find
-;(global-set-key (kbd "C-s") 'save-buffer) ;; Ctrl+s save
+;; Change cursor to a bar
+(setq-default cursor-type 'bar)
 
 (provide 'init-local)
 ;;; init-local.el ends here

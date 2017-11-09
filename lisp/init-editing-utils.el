@@ -1,9 +1,11 @@
 (require-package 'unfill)
 
 (when (fboundp 'electric-pair-mode)
-  (electric-pair-mode))
+  (add-hook 'after-init-hook 'electric-pair-mode))
 (when (eval-when-compile (version< "24.4" emacs-version))
-  (electric-indent-mode 1))
+  (add-hook 'after-init-hook 'electric-indent-mode))
+
+(maybe-require-package 'list-unicode-display)
 
 ;;----------------------------------------------------------------------------
 ;; Some basic preferences
@@ -23,40 +25,33 @@
  save-interprogram-paste-before-kill t
  scroll-preserve-screen-position 'always
  set-mark-command-repeat-pop t
- show-trailing-whitespace t
  tooltip-delay 1.5
  truncate-lines nil
- truncate-partial-width-windows nil
- visible-bell t)
+ truncate-partial-width-windows nil)
 
-(global-auto-revert-mode)
+(add-hook 'after-init-hook 'global-auto-revert-mode)
 (setq global-auto-revert-non-file-buffers t
       auto-revert-verbose nil)
 
-(transient-mark-mode t)
+(add-hook 'after-init-hook 'transient-mark-mode)
+
+
+ ;;; A simple visible bell which works in all terminal types
+
+(defun sanityinc/flash-mode-line ()
+  (invert-face 'mode-line)
+  (run-with-timer 0.05 nil 'invert-face 'mode-line))
+
+(setq-default
+ ring-bell-function 'sanityinc/flash-mode-line)
 
 
-;;; Whitespace
 
-(defun sanityinc/no-trailing-whitespace ()
-  "Turn off display of trailing whitespace in this buffer."
-  (setq show-trailing-whitespace nil))
+(when (maybe-require-package 'beacon)
+  (setq-default beacon-lighter "")
+  (setq-default beacon-size 5)
+  (add-hook 'after-init-hook 'beacon-mode))
 
-;; But don't show trailing whitespace in SQLi, inf-ruby etc.
-(dolist (hook '(special-mode-hook
-                eww-mode-hook
-                term-mode-hook
-                comint-mode-hook
-                compilation-mode-hook
-                twittering-mode-hook
-                minibuffer-setup-hook))
-  (add-hook hook #'sanityinc/no-trailing-whitespace))
-
-
-(require-package 'whitespace-cleanup-mode)
-(global-whitespace-cleanup-mode t)
-
-(global-set-key [remap just-one-space] 'cycle-spacing)
 
 
 ;;; Newline behaviour
@@ -72,28 +67,37 @@
 
 
 
-(when (eval-when-compile (string< "24.3.1" emacs-version))
-  ;; https://github.com/purcell/emacs.d/issues/138
-  (after-load 'subword
-    (diminish 'subword-mode)))
+(after-load 'subword
+  (diminish 'subword-mode))
+
+
+
+(unless (fboundp 'display-line-numbers-mode)
+  (require-package 'nlinum))
+
+
+(when (require-package 'rainbow-delimiters)
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
 
 
 (when (fboundp 'global-prettify-symbols-mode)
-  (global-prettify-symbols-mode))
+  (add-hook 'after-init-hook 'global-prettify-symbols-mode))
 
 
 (require-package 'undo-tree)
-(global-undo-tree-mode)
-(diminish 'undo-tree-mode)
+(add-hook 'after-init-hook 'global-undo-tree-mode)
+(after-load 'undo-tree
+  (diminish 'undo-tree-mode))
 
 
-(require-package 'highlight-symbol)
-(dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
-  (add-hook hook 'highlight-symbol-mode)
-  (add-hook hook 'highlight-symbol-nav-mode))
-(eval-after-load 'highlight-symbol
-  '(diminish 'highlight-symbol-mode))
+(when (maybe-require-package 'symbol-overlay)
+  (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
+    (add-hook hook 'symbol-overlay-mode))
+  (after-load 'symbol-overlay
+    (diminish 'symbol-overlay-mode)
+    (define-key symbol-overlay-mode-map (kbd "M-n") 'symbol-overlay-jump-next)
+    (define-key symbol-overlay-mode-map (kbd "M-p") 'symbol-overlay-jump-prev)))
 
 ;;----------------------------------------------------------------------------
 ;; Zap *up* to char is a handy pair for zap-to-char
@@ -104,6 +108,14 @@
 
 
 (require-package 'browse-kill-ring)
+(setq browse-kill-ring-separator "\f")
+(global-set-key (kbd "M-Y") 'browse-kill-ring)
+(after-load 'browse-kill-ring
+  (define-key browse-kill-ring-mode-map (kbd "C-g") 'browse-kill-ring-quit)
+  (define-key browse-kill-ring-mode-map (kbd "M-n") 'browse-kill-ring-forward)
+  (define-key browse-kill-ring-mode-map (kbd "M-p") 'browse-kill-ring-previous))
+(after-load 'page-break-lines
+  (push 'browse-kill-ring-mode page-break-lines-modes))
 
 
 ;;----------------------------------------------------------------------------
@@ -116,7 +128,7 @@
 ;;----------------------------------------------------------------------------
 ;; Show matching parens
 ;;----------------------------------------------------------------------------
-(show-paren-mode 1)
+(add-hook 'after-init-hook 'show-paren-mode)
 
 ;;----------------------------------------------------------------------------
 ;; Expand region
@@ -141,20 +153,11 @@
 ;;----------------------------------------------------------------------------
 ;; Handy key bindings
 ;;----------------------------------------------------------------------------
-;; To be able to M-x without meta
-(global-set-key (kbd "C-x C-m") 'execute-extended-command)
-
-;; Vimmy alternatives to M-^ and C-u M-^
-(global-set-key (kbd "C-c j") 'join-line)
-(global-set-key (kbd "C-c J") (lambda () (interactive) (join-line 1)))
-
 (global-set-key (kbd "C-.") 'set-mark-command)
 (global-set-key (kbd "C-x C-.") 'pop-global-mark)
 
-(require-package 'ace-jump-mode)
-(global-set-key (kbd "C-;") 'ace-jump-mode)
-(global-set-key (kbd "C-:") 'ace-jump-word-mode)
-
+(when (maybe-require-package 'avy)
+  (global-set-key (kbd "C-;") 'avy-goto-char-timer))
 
 (require-package 'multiple-cursors)
 ;; multiple-cursors
@@ -163,10 +166,10 @@
 (global-set-key (kbd "C-+") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 ;; From active region to multiple cursors:
-(global-set-key (kbd "C-c c r") 'set-rectangular-region-anchor)
-(global-set-key (kbd "C-c c c") 'mc/edit-lines)
-(global-set-key (kbd "C-c c e") 'mc/edit-ends-of-lines)
-(global-set-key (kbd "C-c c a") 'mc/edit-beginnings-of-lines)
+(global-set-key (kbd "C-c m r") 'set-rectangular-region-anchor)
+(global-set-key (kbd "C-c m c") 'mc/edit-lines)
+(global-set-key (kbd "C-c m e") 'mc/edit-ends-of-lines)
+(global-set-key (kbd "C-c m a") 'mc/edit-beginnings-of-lines)
 
 
 ;; Train myself to use M-f and M-b instead
@@ -188,47 +191,10 @@
 ;;----------------------------------------------------------------------------
 ;; Page break lines
 ;;----------------------------------------------------------------------------
-(require-package 'page-break-lines)
-(global-page-break-lines-mode)
-(diminish 'page-break-lines-mode)
-
-;;----------------------------------------------------------------------------
-;; Fill column indicator
-;;----------------------------------------------------------------------------
-(when (eval-when-compile (> emacs-major-version 23))
-  (require-package 'fill-column-indicator)
-  (defun sanityinc/prog-mode-fci-settings ()
-    (turn-on-fci-mode)
-    (when show-trailing-whitespace
-      (set (make-local-variable 'whitespace-style) '(face trailing))
-      (whitespace-mode 1)))
-
-  ;;(add-hook 'prog-mode-hook 'sanityinc/prog-mode-fci-settings)
-
-  (defun sanityinc/fci-enabled-p ()
-    (and (boundp 'fci-mode) fci-mode))
-
-  (defvar sanityinc/fci-mode-suppressed nil)
-  (defadvice popup-create (before suppress-fci-mode activate)
-    "Suspend fci-mode while popups are visible"
-    (let ((fci-enabled (sanityinc/fci-enabled-p)))
-      (when fci-enabled
-        (set (make-local-variable 'sanityinc/fci-mode-suppressed) fci-enabled)
-        (turn-off-fci-mode))))
-  (defadvice popup-delete (after restore-fci-mode activate)
-    "Restore fci-mode when all popups have closed"
-    (when (and sanityinc/fci-mode-suppressed
-               (null popup-instances))
-      (setq sanityinc/fci-mode-suppressed nil)
-      (turn-on-fci-mode)))
-
-  ;; Regenerate fci-mode line images after switching themes
-  (defadvice enable-theme (after recompute-fci-face activate)
-    (dolist (buffer (buffer-list))
-      (with-current-buffer buffer
-        (when (sanityinc/fci-enabled-p)
-          (turn-on-fci-mode))))))
-
+(when (maybe-require-package 'page-break-lines)
+  (add-hook 'after-init-hook 'global-page-break-lines-mode)
+  (after-load 'page-break-lines
+    (diminish 'page-break-lines-mode)))
 
 ;;----------------------------------------------------------------------------
 ;; Shift lines up and down with M-up and M-down. When paredit is enabled,
@@ -241,8 +207,8 @@
 (global-set-key [M-S-up] 'md/move-lines-up)
 (global-set-key [M-S-down] 'md/move-lines-down)
 
-(global-set-key (kbd "C-c p") 'md/duplicate-down)
-(global-set-key (kbd "C-c P") 'md/duplicate-up)
+(global-set-key (kbd "C-c d") 'md/duplicate-down)
+(global-set-key (kbd "C-c u") 'md/duplicate-up)
 
 ;;----------------------------------------------------------------------------
 ;; Fix backward-up-list to understand quotes, see http://bit.ly/h7mdIL
@@ -263,9 +229,9 @@
 ;; Cut/copy the current line if no region is active
 ;;----------------------------------------------------------------------------
 (require-package 'whole-line-or-region)
-(whole-line-or-region-mode t)
-(diminish 'whole-line-or-region-mode)
-(make-variable-buffer-local 'whole-line-or-region-mode)
+(add-hook 'after-init-hook 'whole-line-or-region-mode)
+(after-load 'whole-line-or-region
+  (diminish 'whole-line-or-region-mode))
 
 (defun suspend-mode-during-cua-rect-selection (mode-name)
   "Add an advice to suspend `MODE-NAME' while selecting a CUA rectangle."
@@ -295,10 +261,10 @@ on the new line if the line would have been blank.
 With arg N, insert N newlines."
   (interactive "*p")
   (let* ((do-fill-prefix (and fill-prefix (bolp)))
-	 (do-left-margin (and (bolp) (> (current-left-margin) 0)))
-	 (loc (point-marker))
-	 ;; Don't expand an abbrev before point.
-	 (abbrev-mode nil))
+         (do-left-margin (and (bolp) (> (current-left-margin) 0)))
+         (loc (point-marker))
+         ;; Don't expand an abbrev before point.
+         (abbrev-mode nil))
     (delete-horizontal-space t)
     (newline n)
     (indent-according-to-mode)
@@ -307,8 +273,8 @@ With arg N, insert N newlines."
     (goto-char loc)
     (while (> n 0)
       (cond ((bolp)
-	     (if do-left-margin (indent-to (current-left-margin)))
-	     (if do-fill-prefix (insert-and-inherit fill-prefix))))
+             (if do-left-margin (indent-to (current-left-margin)))
+             (if do-fill-prefix (insert-and-inherit fill-prefix))))
       (forward-line 1)
       (setq n (1- n)))
     (goto-char loc)
@@ -337,13 +303,14 @@ With arg N, insert N newlines."
 
 
 (require-package 'highlight-escape-sequences)
-(hes-mode)
+(add-hook 'after-init-hook 'hes-mode)
 
 
 (require-package 'guide-key)
-(setq guide-key/guide-key-sequence '("C-x" "C-c" "C-x 4" "C-x 5" "C-c ;" "C-c ; f" "C-c ' f" "C-x n"))
-(guide-key-mode 1)
-(diminish 'guide-key-mode)
+(setq guide-key/guide-key-sequence '("C-x" "C-c" "C-x 4" "C-x 5" "C-c ;" "C-c ; f" "C-c ' f" "C-x n" "C-x C-r" "C-x r" "M-s" "C-h" "C-c C-a"))
+(add-hook 'after-init-hook 'guide-key-mode)
+(after-load 'guide-key
+  (diminish 'guide-key-mode))
 
 
 (provide 'init-editing-utils)

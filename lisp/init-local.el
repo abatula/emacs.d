@@ -14,11 +14,23 @@
 (delete-selection-mode 1) ;; Overwrite/delete selected text
 
 ;; Display line numbers
+;; Intelligently increase line number size on font increase
+;; https://stackoverflow.com/questions/9304192/emacs-linum-mode-and-size-of-font-unreadable-line-numbers
+
 (require 'linum)
-(global-linum-mode t)
+(defun linum-update-window-scale-fix (win)
+  "fix linum for scaled text"
+  (set-window-margins win
+                      (ceiling (* (if (boundp 'text-scale-mode-step)
+                                      (expt text-scale-mode-step
+                                            text-scale-mode-amount) 1)
+                                  (if (car (window-margins))
+                                      (car (window-margins)) 1)
+                                  ))))
+(advice-add #'linum-update-window :after #'linum-update-window-scale-fix)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Intelligent commenting
+                                        ; Intelligent commenting
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Intelligent line/region comments

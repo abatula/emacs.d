@@ -6,10 +6,11 @@
 This emacs configuration tree is forked from 
 https://github.com/purcell/emacs.d and modified for my personal
 preferences, focusing more on Python with some MATLAB/Octave and 
-Latex thrown in. My tweaks have only ever been tested in Linux.
+Latex thrown in. My tweaks have only ever been tested in Linux and a little bit of OS X.
 
 Emacs itself comes with support for many programming languages. This
-config adds improved defaults and extended support for the following:
+config adds improved defaults and extended support for the following, listed
+in the approximate order of how much I use them, from most to least:
 
 * Python
 * Latex
@@ -17,13 +18,14 @@ config adds improved defaults and extended support for the following:
 * Ruby / Ruby on Rails
 * CSS / LESS / SASS / SCSS
 * HAML / Markdown / Textile / ERB
+* Haskell / Elm
+* Javascript / Typescript / Coffeescript
+* HTML / HAML / Markdown / Textile / ERB
+* Rust
 * Clojure (with Cider and nRepl)
-* Javascript / Coffeescript
-* PHP
-* Haskell
-* Elm
-* Erlang
 * Common Lisp (with Slime)
+* PHP
+* Erlang
 
 In particular, there's a nice config for *autocompletion* with
 [company](https://company-mode.github.io/), and
@@ -106,19 +108,5 @@ You might also want to check out `emacs-starter-kit` and `prelude`.
 
 ## Support / issues
 
-If you hit any problems, please first ensure that you are using the latest version
-of this code, and that you have updated your packages to the most recent available
-versions (see "Updates" above). If you still experience problems, go ahead and
-[file an issue on the github project](https://github.com/purcell/emacs.d).
-
--Steve Purcell
-
+None, this is my personal fork of a much better project.
 <hr>
-
-[Support this project and my other Open Source work](https://www.patreon.com/sanityinc)
-
-[![](http://www.linkedin.com/img/webpromo/btn_liprofile_blue_80x15.png)](http://uk.linkedin.com/in/stevepurcell)
-
-[sanityinc.com](http://www.sanityinc.com/)
-
-[@sanityinc](https://twitter.com/sanityinc)

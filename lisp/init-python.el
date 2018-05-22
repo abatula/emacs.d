@@ -17,4 +17,4 @@
       (add-hook 'python-mode-hook
                 (lambda () (sanityinc/local-push-company-backend 'company-anaconda))))))
 
-(provide 'init-python-mode)
+(provide 'init-python)

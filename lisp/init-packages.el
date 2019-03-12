@@ -23,6 +23,7 @@ There are two things you can do about this warning:
                      ergoemacs-mode
                      solarized-theme
                      py-autopep8
+                     json-mode
                      auctex ;; Latex
                      ess ;; R
                      ))

@@ -84,6 +84,7 @@
 ;;---------------------------------------------
 
 (require 'init-python)
+(require 'init-json)
 
 ;;;; Configs short enough not to need a file (yet)
 

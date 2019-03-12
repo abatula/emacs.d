@@ -7,7 +7,9 @@
  '(custom-safe-themes
    (quote
     ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
- '(package-selected-packages (quote (solarized-theme persistent-soft ergoemacs-mode))))
+ '(package-selected-packages
+   (quote
+    (hippie-expand-slime company solarized-theme persistent-soft ergoemacs-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -85,6 +87,7 @@
 
 (require 'init-python)
 (require 'init-json)
+(require 'init-hippie-expand)
 
 ;;;; Configs short enough not to need a file (yet)
 
@@ -94,3 +97,6 @@
 
 ;; ESS for R
 (require 'ess-site)
+
+;; Company for autocomplete
+(add-hook 'after-init-hook 'global-company-mode)

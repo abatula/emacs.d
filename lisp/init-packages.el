@@ -26,6 +26,7 @@ There are two things you can do about this warning:
                      json-mode
                      auctex ;; Latex
                      ess ;; R
+                     company ;; autocomplete
                      ))
 
 ;; activate the packages

@@ -23,6 +23,8 @@ There are two things you can do about this warning:
                      ergoemacs-mode
                      solarized-theme
                      py-autopep8
+                     auctex ;; Latex
+                     ess ;; R
                      ))
 
 ;; activate the packages

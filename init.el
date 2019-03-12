@@ -15,12 +15,15 @@
  ;; If there is more than one, they won't work right.
  )
 
+;;---------------------------------------------
+;; Package install/setup
+;;---------------------------------------------
+
 ;; Add lisp directory to the load path
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 ;; Install required packages, if not already
 (require 'init-packages)
-(package-initialize)
 
 ;; ErgoEmacs
 (require 'ergoemacs-mode)
@@ -81,3 +84,12 @@
 ;;---------------------------------------------
 
 (require 'init-python)
+
+;;;; Configs short enough not to need a file (yet)
+
+;; PDF latex
+(require 'tex)
+(TeX-global-PDF-mode t)
+
+;; ESS for R
+(require 'ess-site)

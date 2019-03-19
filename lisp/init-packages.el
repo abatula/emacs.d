@@ -23,10 +23,12 @@ There are two things you can do about this warning:
                      ergoemacs-mode
                      solarized-theme
                      py-autopep8
+                     elpy ;; more python
                      json-mode
                      auctex ;; Latex
                      ess ;; R
                      company ;; autocomplete
+                     flycheck ;; coding syntax
                      ))
 
 ;; activate the packages

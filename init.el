@@ -88,6 +88,7 @@
 (require 'init-python)
 (require 'init-json)
 (require 'init-hippie-expand)
+(require 'init-flycheck)
 
 ;;;; Configs short enough not to need a file (yet)
 

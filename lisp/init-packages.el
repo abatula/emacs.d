@@ -29,6 +29,7 @@ There are two things you can do about this warning:
                      ess ;; R
                      company ;; autocomplete
                      flycheck ;; coding syntax
+                     markdown-mode
                      ))
 
 ;; activate the packages
